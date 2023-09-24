@@ -1,0 +1,51 @@
+/****************************************************************
+Lawrence Hoerst:
+Question 2: When I run free, I notice that the number of free mb 
+is smaller than I would've thought, only about 7960. Which is only
+about 8 gb. We really skimped out on the remote server huh.
+
+Question 4: It seems like the results did match what I wanted the
+program to do. I allocated 100 mb and the number of used memory
+on the system decreased by that much. That said, when I tried to
+run this and take up a lot of memory, my program refused to give
+me that much. Oddly, malloc never returned NULL even when I asked
+for 10,000 mb on the system but it didn't increase the number of
+bytes that I asked for. It seems like I'm personally capped at
+around 1000 mb on the vm. Probably not intended behavior.
+
+Question 6: I got the process ids from running ps auxw and 
+reading from the table. I'll be using some of the processes my
+user is holding up. The process ids are:
+175777
+175778
+175747
+
+Question 7: Oh my goodness. There is a lot of information here.
+I see address, permissions, offset, device, inode, size, rss,
+pss, referenced, anonymous, lazyfree, and way more. Also,
+I think the name SchmemPmdMapped is funny. There are many more
+fields that modern memory uses than the, now obviously greatly
+simplified, code/stack/heap example that was taught in the book.
+
+Question 8: I notice that one of the nonsense memory addresses
+in the process gets bigger the larger of an argument I pass into
+my program. This would seem to be the integer array that I
+initialize to take up the number of mb that the user wants to
+take up.
+
+Here is that key row from the tables of several calls:
+
+w/ 10 mb
+00007f07e0dbf000   10244   10244   10244 rw---   [ anon ]
+w/ 100 mb
+00007fd2dcf4b000  102404  102404  102404 rw---   [ anon ]
+w/ 1000 mb
+00007f629b5f4000 1851396 1851396 1851396 rw---   [ anon ]
+
+These results did match my intuition about what the table would
+show me but I didn't quite expect the large number of rows that
+were stored within the tables. It would be interesting in the
+future to figure out what each of those rows represents in my
+program.
+
+****************************************************************/
