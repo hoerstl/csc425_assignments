@@ -21,6 +21,7 @@ freeList::reserve_space( int size ) {
       newFreeNode[1] = loc[1];
       // Now we alter the target node to become a header for allocated space
       loc[0] = size;
+      //cout << "Planting a magic number at (0x" << hex << loc + 1 << ")." << endl;
       loc[1] = 1234567; // Magic number
       // We make the previous node in the free list point to our new node
       if (previousLoc){
@@ -36,18 +37,29 @@ freeList::reserve_space( int size ) {
   if (loc == 0){
     return (long int*)-1;
   }
-  return loc;
+  return loc+2;
 }
 
 void
 freeList::free_space( long int* location ) {
-  return;
-  if (location[1] != 1234567){
-    cout << "Invalid Magic Number " << location[1] << " read. Expected 1234567." << endl;
+  long int* header = location - 2;
+  if (header[1] != 1234567){
+    cout << "Invalid Magic Number " << header[1] << " at (" << hex << header+1 << "). Expected 1234567." << endl;
     return;
   }
-  location[1] = (long int)head;
-  head = location;
+  // I'm going to keep the free list sorted in order so let's find the correct node shall we?
+  long int *infimum = NULL;
+  long int *suprimum = head;
+  while(suprimum != 0 && header > suprimum){
+    infimum = suprimum;
+    suprimum = (long int*)(suprimum[1]);
+  }
+  if (infimum){
+    infimum[1] = (long int)header;
+  } else{
+    head = header;
+  }
+  header[1] = (long int)suprimum;
 }
 
 void
