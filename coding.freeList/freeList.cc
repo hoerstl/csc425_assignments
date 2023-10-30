@@ -64,6 +64,17 @@ freeList::free_space( long int* location ) {
 
 void
 freeList::coalesce_forward() {
+  long int* current = head;
+  while (current){
+    // check to see if this node can merge with the one in front of it
+    if (current+current[0]+2 == (long int*)(current[1])){
+      // Merge the nodes
+      current[0] += ((long int*)(current[1]))[0] + 2;
+      current[1] = ((long int*)(current[1]))[1];
+      continue;
+    }
+    current = (long int*)(current[1]);
+  }
 }
 
 // print() is given to you. It traverses the free list and prints out what is there.
